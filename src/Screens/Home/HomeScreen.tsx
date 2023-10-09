@@ -1,28 +1,40 @@
-import {View, Text, SafeAreaView, Image, ScrollView} from 'react-native';
-import React, {useEffect} from 'react';
-import {styles} from './stylesheetHome';
-import {ItemsHeader} from '../../Components/Items/ItemHeader/ItemsHeader';
-import {allCategoriesExercises} from '../../Services/FitServices/allCategoriesExercises.service';
-import {useAppDispatch, useAppSelector} from '../../Globales/globales';
-import {storeInterface} from '../../Store/store';
-import {CardsFitness} from '../../Components/Card/CardsFitness/CardFitness';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../../Navigations/StackNavigator';
+import { View, Text, SafeAreaView, Image, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { styles } from './stylesheetHome';
+import { ItemsHeader } from '../../Components/Items/ItemHeader/ItemsHeader';
+import { allCategoriesExercises } from '../../Services/FitServices/allCategoriesExercises.service';
+import { useAppDispatch, useAppSelector } from '../../Globales/globales';
+import { storeInterface } from '../../Store/store';
+import { CardsFitness } from '../../Components/Card/CardsFitness/CardFitness';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../Navigations/StackNavigator';
+import { setCategoryExercise } from '../../Store/Slices/fitSlices';
 
 export type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
-const HomeScreen = ({navigation}: Props) => {
+const HomeScreen = ({ navigation }: Props) => {
+  const [arrIsCompleted, setArrIsCompleted] = useState<boolean[]>([])
   const dispatch = useAppDispatch();
 
-  const {data: fitnessCategories} = useAppSelector(
-    (store: storeInterface) => store.fit.categoriesExercises,
+  const { categoriesExercises: { data: fitnessCategories }, exercisesCompleted } = useAppSelector(
+    (store: storeInterface) => store.fit,
   );
+
   useEffect(() => {
     dispatch(allCategoriesExercises());
   }, []);
 
+  useEffect(() => {
+    const completed = fitnessCategories.map((fc, index) => (fc.name === exercisesCompleted[index].type) && fc.excersises.length === exercisesCompleted[index].completed.length)
+    setArrIsCompleted(completed)
+  }, [exercisesCompleted, fitnessCategories]);
+
+  useEffect(() => {
+    setCategoryExercise({ id: 0, exercises: [], nameCategory: '' })
+  }, []);
+
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.header}>
         <Text style={styles.titleHeader}>Workouts</Text>
 
@@ -31,7 +43,7 @@ const HomeScreen = ({navigation}: Props) => {
           <ItemsHeader count={0} title="Kcal" />
           <ItemsHeader count={0} title="Mins" />
         </View>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <Image
             style={styles.imageFit}
             source={{
@@ -40,10 +52,11 @@ const HomeScreen = ({navigation}: Props) => {
           />
         </View>
       </View>
-      <View style={{marginTop: 70, flex: 1}}>
+      <View style={{ marginTop: 70, flex: 1 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           {fitnessCategories.length > 0 ? (
             <CardsFitness
+              arrCompleted={arrIsCompleted}
               action={(item: any) =>
                 navigation.navigate('Workout', {
                   id: item.id,

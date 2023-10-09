@@ -6,7 +6,7 @@ import {
   StoreEnhancer,
   ThunkMiddleware,
 } from '@reduxjs/toolkit';
-import {CurriedGetDefaultMiddleware} from '@reduxjs/toolkit/dist/getDefaultMiddleware';
+import { CurriedGetDefaultMiddleware } from '@reduxjs/toolkit/dist/getDefaultMiddleware';
 import {
   persistReducer,
   persistStore,
@@ -17,8 +17,8 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import {IFitSlice} from '../interfaces/InterfacesSlices/InterfaceFit.slice';
-import {fitSlices} from './Slices/fitSlices';
+import { IFitSlice } from '../interfaces/InterfacesSlices/InterfaceFit.slice';
+import { fitSlices } from './Slices/fitSlices';
 import AsyncStorage, {
   AsyncStorageStatic,
 } from '@react-native-async-storage/async-storage';
@@ -40,7 +40,7 @@ const userPersistConfig: IPersist = {
   key: 'fit',
   storage: AsyncStorage,
   timeout: null,
-  whitelist: ['exercisesCompleted'],
+  whitelist: ['exercisesCompleted', 'referenceExerciseId'],
   blacklist: [''],
 };
 
