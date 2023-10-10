@@ -1,5 +1,6 @@
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import FastImage from 'react-native-fast-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RootStackParamList } from '../../Navigations/StackNavigator';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -50,10 +51,9 @@ export const DetailsFitScreen = ({ route, navigation }: Props) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Image
-        resizeMethod="scale"
-        style={styles.cardImage}
-        source={{ uri: image }}
+      <FastImage style={styles.cardImage}
+        source={{ uri: image, priority: FastImage.priority.normal, cache: FastImage.cacheControl.immutable }}
+        resizeMode={FastImage.resizeMode.stretch}
       />
       <View style={styles.container}>
         <View style={styles.col_1}>
