@@ -15,7 +15,7 @@ import {setSaveProfile} from '../../Store/Slices/profileSlices';
 
 import {storeInterface} from '../../Store/store';
 import {colorsPrimary, useAppDispatch, useAppSelector} from '../../Globales';
-import {styles} from './stylesheetHomeModalProfile';
+import {styles} from './stylesheetModalProfile';
 
 export const ModalProfile = ({isModal, onCloseModal}: any) => {
   const dispatch = useAppDispatch();
