@@ -1,10 +1,14 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {typeStatus} from '../../Globales/globales';
 import {
   Excersise,
   ICategoriesExercises,
 } from '../../interfaces/InterfacesServices/InterfaceCategories';
-import {IFitSlice} from '../../interfaces/InterfacesSlices/InterfaceFit.slice';
+import {
+  ETypeExercise,
+  IFitSlice,
+  TTypeExercise,
+  typeStatus,
+} from '../../interfaces';
 
 const initialState: IFitSlice = {
   categoriesExercises: {
@@ -14,48 +18,28 @@ const initialState: IFitSlice = {
       msg: '',
     },
   },
-  categoryExercise: {id: null, exercises: [], nameCategory: ''},
+  categoryExercise: {id: 0, exercises: [], nameCategory: ''},
   initialIndexScreen: 0,
   exercisesCompleted: [
     {
-      type: 'FULL BODY',
+      type: ETypeExercise.FULL_BODY,
       indexTo: null,
-      completed: [
-        {
-          id: null,
-          status: 'Unfilled',
-        },
-      ],
+      completed: [],
     },
     {
-      type: 'ABS BEGINNER',
+      type: ETypeExercise.ABS_BEGINNER,
       indexTo: null,
-      completed: [
-        {
-          id: null,
-          status: 'Unfilled',
-        },
-      ],
+      completed: [],
     },
     {
-      type: 'ARM BEGINNER',
+      type: ETypeExercise.ARM_BEGINNER,
       indexTo: null,
-      completed: [
-        {
-          id: null,
-          status: 'Unfilled',
-        },
-      ],
+      completed: [],
     },
     {
-      type: 'CHEST BEGINNER',
+      type: ETypeExercise.CHEST_BEGINNER,
       indexTo: null,
-      completed: [
-        {
-          id: null,
-          status: 'Unfilled',
-        },
-      ],
+      completed: [],
     },
   ],
 };
@@ -97,17 +81,39 @@ export const fitSlices = createSlice({
       action: PayloadAction<{
         type: string;
         index: number;
-        data: {id: string; status: string};
+        data: {id: string; status: string; secExercise: number};
       }>,
     ) => {
       state.exercisesCompleted.map(d => {
         if (d.type === action.payload.type) {
           d.indexTo = action.payload.index;
-          if (d.completed[0].id === null) {
-            d.completed = [action.payload.data];
-          } else {
-            d.completed.push(action.payload.data);
+
+          // Verifica si action.payload.data no está ya en el arreglo 'completed'
+          const isNotDuplicate = d.completed.every(
+            item => item !== action.payload.data,
+          );
+
+          if (isNotDuplicate) {
+            if (d.completed.length === 0) {
+              d.completed = [action.payload.data];
+            } else {
+              d.completed.push(action.payload.data);
+            }
           }
+        }
+      });
+    },
+    setResetExercise: (
+      state,
+      action: PayloadAction<{
+        type: TTypeExercise;
+      }>,
+    ) => {
+      state.initialIndexScreen = 0;
+      state.exercisesCompleted.map(exercise => {
+        if (action.payload.type === exercise.type) {
+          exercise.indexTo = 0;
+          exercise.completed = [];
         }
       });
     },
@@ -122,6 +128,7 @@ export const {
   setCategoryExercise,
   setInitialIndexScreen,
   setExercisesCompleted,
+  setResetExercise,
 } = fitSlices.actions;
 
 export default fitSlices.reducer;

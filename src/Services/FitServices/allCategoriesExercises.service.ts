@@ -1,4 +1,4 @@
-import {Dispatch} from '@reduxjs/toolkit';
+import { Dispatch } from '@reduxjs/toolkit';
 import {
   allCategoriesExercises as allCategories,
   errAllCategoriesExercises,

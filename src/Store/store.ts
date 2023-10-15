@@ -17,11 +17,13 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import {IFitSlice} from '../interfaces/InterfacesSlices/InterfaceFit.slice';
-import {fitSlices} from './Slices/fitSlices';
+
 import AsyncStorage, {
   AsyncStorageStatic,
 } from '@react-native-async-storage/async-storage';
+import {fitSlices} from './Slices/fitSlices';
+import {profileSlices} from './Slices/profileSlices';
+import {IFitSlice, IProfileSlice} from '../interfaces';
 
 interface IPersist {
   key: string;
@@ -33,19 +35,28 @@ interface IPersist {
 const rootPersistConfig: IPersist = {
   key: 'root',
   storage: AsyncStorage,
-  blacklist: ['fit'],
+  blacklist: ['fit', 'profile'],
   timeout: null,
 };
-const userPersistConfig: IPersist = {
+const fitPersistConfig: IPersist = {
   key: 'fit',
   storage: AsyncStorage,
   timeout: null,
-  whitelist: ['exercisesCompleted'],
+  whitelist: ['exercisesCompleted', 'referenceExerciseId'],
+  blacklist: [''],
+};
+
+const profilePersistConfig: IPersist = {
+  key: 'profile',
+  storage: AsyncStorage,
+  timeout: null,
+  whitelist: ['userProfile'],
   blacklist: [''],
 };
 
 const rootReducer = combineReducers({
-  fit: persistReducer(userPersistConfig, fitSlices.reducer),
+  fit: persistReducer(fitPersistConfig, fitSlices.reducer),
+  profile: persistReducer(profilePersistConfig, profileSlices.reducer),
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
@@ -64,6 +75,7 @@ export const store = configureStore({
 export const persistor = persistStore(store);
 export interface storeInterface {
   fit: IFitSlice;
+  profile: IProfileSlice;
 }
 // export const store = configureStore<
 //   storeInterface,

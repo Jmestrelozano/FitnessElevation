@@ -1,10 +1,11 @@
-import {Image, Pressable, Text, View} from 'react-native';
+import {Pressable, Text, View} from 'react-native';
 import React from 'react';
 import {Excersise} from '../../../interfaces/InterfacesServices/InterfaceCategories';
 import {styles} from './stylesheetCardWorkout';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useAppSelector} from '../../../Globales/globales';
 import {storeInterface} from '../../../Store/store';
+import FastImage from 'react-native-fast-image';
 
 interface Props {
   exersises: Excersise[];
@@ -24,10 +25,14 @@ export const CardWorkout = ({exersises, navigateTo, index}: Props) => {
             onPress={() => navigateTo(index)}
             style={styles.card}
             key={id}>
-            <Image
-              resizeMode="contain"
+            <FastImage
               style={styles.cardImg}
-              source={{uri: image}}
+              source={{
+                uri: image,
+                priority: FastImage.priority.normal,
+                cache: FastImage.cacheControl.immutable,
+              }}
+              resizeMode={FastImage.resizeMode.contain}
             />
 
             <View
@@ -59,5 +64,3 @@ export const CardWorkout = ({exersises, navigateTo, index}: Props) => {
     </>
   );
 };
-//#00CC99
-//#dae0f2
