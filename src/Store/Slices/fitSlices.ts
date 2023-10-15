@@ -1,9 +1,14 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {
   Excersise,
   ICategoriesExercises,
 } from '../../interfaces/InterfacesServices/InterfaceCategories';
-import { ETypeExercise, IFitSlice, TTypeExercise, typeStatus } from '../../interfaces';
+import {
+  ETypeExercise,
+  IFitSlice,
+  TTypeExercise,
+  typeStatus,
+} from '../../interfaces';
 
 const initialState: IFitSlice = {
   categoriesExercises: {
@@ -13,32 +18,28 @@ const initialState: IFitSlice = {
       msg: '',
     },
   },
-  categoryExercise: { id: 0, exercises: [], nameCategory: '' },
+  categoryExercise: {id: 0, exercises: [], nameCategory: ''},
   initialIndexScreen: 0,
   exercisesCompleted: [
     {
       type: ETypeExercise.FULL_BODY,
       indexTo: null,
-      completed: [
-      ],
+      completed: [],
     },
     {
       type: ETypeExercise.ABS_BEGINNER,
       indexTo: null,
-      completed: [
-      ],
+      completed: [],
     },
     {
       type: ETypeExercise.ARM_BEGINNER,
       indexTo: null,
-      completed: [
-      ],
+      completed: [],
     },
     {
       type: ETypeExercise.CHEST_BEGINNER,
       indexTo: null,
-      completed: [
-      ],
+      completed: [],
     },
   ],
 };
@@ -80,7 +81,7 @@ export const fitSlices = createSlice({
       action: PayloadAction<{
         type: string;
         index: number;
-        data: { id: string; status: string };
+        data: {id: string; status: string; secExercise: number};
       }>,
     ) => {
       state.exercisesCompleted.map(d => {
@@ -88,7 +89,9 @@ export const fitSlices = createSlice({
           d.indexTo = action.payload.index;
 
           // Verifica si action.payload.data no está ya en el arreglo 'completed'
-          const isNotDuplicate = d.completed.every(item => item !== action.payload.data);
+          const isNotDuplicate = d.completed.every(
+            item => item !== action.payload.data,
+          );
 
           if (isNotDuplicate) {
             if (d.completed.length === 0) {
@@ -99,19 +102,21 @@ export const fitSlices = createSlice({
           }
         }
       });
-
     },
-    setResetExercise: (state, action: PayloadAction<{
-      type: TTypeExercise
-    }>) => {
+    setResetExercise: (
+      state,
+      action: PayloadAction<{
+        type: TTypeExercise;
+      }>,
+    ) => {
       state.initialIndexScreen = 0;
       state.exercisesCompleted.map(exercise => {
         if (action.payload.type === exercise.type) {
           exercise.indexTo = 0;
-          exercise.completed = []
+          exercise.completed = [];
         }
-      })
-    }
+      });
+    },
   },
 });
 
