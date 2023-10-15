@@ -2,7 +2,6 @@ import {
   View,
   Text,
   SafeAreaView,
-  Image,
   Pressable,
   BackHandler,
   Alert,
@@ -43,7 +42,7 @@ const BreakExerciseScreen = ({navigation, route}: Props) => {
       }
       return;
     }
-  }, 4000);
+  }, 1000);
 
   useEffect(() => {
     sampleInterval;
@@ -51,16 +50,21 @@ const BreakExerciseScreen = ({navigation, route}: Props) => {
       clearInterval(sampleInterval);
     };
   });
+
+  useEffect(() => {
+    if (mins === 0 && secs === 0) navigation.navigate('DetailFit');
+  }, [mins, secs]);
+
   const backAction = () => {
     setIsPaused(true);
-    Alert.alert('Salir', 'Estas seguro de salir?', [
+    Alert.alert('Exit', 'Are you sure you want to leave?', [
       {
-        text: 'Cancelar',
+        text: 'Cancel',
         onPress: () => setIsPaused(false),
         style: 'cancel',
       },
       {
-        text: 'Salir',
+        text: 'Exit',
         onPress: () => {
           navigation.popToTop();
           dispatch(setInitialIndexScreen(0));
@@ -81,9 +85,9 @@ const BreakExerciseScreen = ({navigation, route}: Props) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
-        <IconBack />
+        <IconBack onPress={backAction} />
         <View style={styles.sectionTime}>
-          <Text style={styles.titleTime}>Descanso</Text>
+          <Text style={styles.titleTime}>Break</Text>
           <Text style={styles.time}>
             {mins < 10 ? `0${mins}` : mins}:{secs < 10 ? `0${secs}` : secs}
           </Text>
@@ -111,14 +115,16 @@ const BreakExerciseScreen = ({navigation, route}: Props) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Text style={{fontWeight: 'bold', color: 'white'}}>+20s</Text>
+              <Text style={{fontWeight: 'bold', color: colorsPrimary.white}}>
+                +20s
+              </Text>
             </Pressable>
 
             <Pressable
               onPress={() => navigation.navigate('DetailFit')}
               style={{
                 borderRadius: 20,
-                backgroundColor: 'white',
+                backgroundColor: colorsPrimary.white,
                 width: 90,
                 height: 35,
                 justifyContent: 'center',
@@ -138,14 +144,14 @@ const BreakExerciseScreen = ({navigation, route}: Props) => {
             flexDirection: 'column',
             justifyContent: 'space-between',
           }}>
-          <Text style={{color: 'black'}}>
+          <Text style={{color: colorsPrimary.black}}>
             Proximo{' '}
             <Text>
               {initialIndexScreen + 1}/{categoryExercise.exercises.length}
             </Text>
           </Text>
-          <Text style={{color: 'black'}}>{name}</Text>
-          <Text style={{color: 'black'}}>x{sets}</Text>
+          <Text style={{color: colorsPrimary.black}}>{name}</Text>
+          <Text style={{color: colorsPrimary.black}}>x{sets}</Text>
         </View>
       </View>
     </SafeAreaView>

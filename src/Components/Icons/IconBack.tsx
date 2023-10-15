@@ -1,15 +1,19 @@
-import { View, Text } from 'react-native';
+
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { styles } from '../../Screens/Workout/stylesheetWorkout';
 import { colorsPrimary } from '../../Globales/globales';
-import { useNavigation } from '@react-navigation/native';
 
-export const IconBack = () => {
-  const navigate = useNavigation()
+
+interface IIconBack {
+  onPress: () => void
+}
+
+export const IconBack = ({ onPress }: IIconBack) => {
+
   return (
     <Icon
-      onPress={() => navigate.goBack()}
+      onPress={onPress}
       style={styles.iconBack}
       name="arrow-back"
       size={28}
